@@ -1,0 +1,19 @@
+{
+  "name": "p5_05102021",
+  "version": "1.0.0",
+  "description": "This is the front end and back end server for Project 5 of the Web Developer path.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DamienLopvet/P5_05102021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DamienLopvet/P5_05102021/issues"
+  },
+  "homepage": "https://github.com/DamienLopvet/P5_05102021#readme"
+}

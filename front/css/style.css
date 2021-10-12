@@ -160,6 +160,8 @@ main {
 	font-weight: 700;
 	text-align: center;
 	text-transform: uppercase;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 .items article p {
   text-align: center;
