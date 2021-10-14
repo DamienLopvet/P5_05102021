@@ -19,6 +19,10 @@ h2 {
 	margin-bottom: 60px;
 	text-align: center;
 }
+a{
+	text-decoration: none;
+	color: unset;
+}
 .logo {
 	height: 100px;
 }
@@ -133,8 +137,7 @@ main {
 }
 .items a {
 	width: 21%;
-	text-decoration: none;
-	color: unset;
+	
 }
 .items a:hover article {
 	box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
@@ -145,13 +148,13 @@ main {
 	flex-direction: column;
 	align-items: center;
 	margin-bottom: 40px;
-	padding-top: 25px;
+	padding-top: 5px;
 	width: 100%;
 	border-radius: 10px;
 }
 .items article img {
-	width: 160px;
-	height: 160px;
+	width: 95%;
+	height: 174px;
 	object-fit: cover;
 	border-radius: 10px;
 }

@@ -5,7 +5,7 @@ fetch("http://localhost:3000/api/products")
         let product = new Product(jsonProduct);
         document
         .getElementById('items')
-        .innerHTML += `<a href="./product.html?productId=${product._id} ">
+        .innerHTML += `<a href="./product.html?Id=${product._id} ">
         <article>
           <img src="${product.imageUrl}" alt="${product.altTxt} ">
           <p class="productPrice">${product.price} euros</P>

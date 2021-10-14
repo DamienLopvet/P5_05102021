@@ -1,14 +1,12 @@
-const params = new URLSearchParams(window.location.search)
-const productId = params.get('productId')
+const productId = new URLSearchParams(window.location.search).get('Id')
 
 
-fetch("http://localhost:3000/api/products")
+
+fetch(`http://localhost:3000/api/products/${productId}`)
 .then(data => data.json())
-.then( jsonlistProduct => {
-   
-    for (let jsonProduct of jsonlistProduct){
-        let product = new Product(jsonProduct);
-        if (productId == product._id){
+.then( jsonProduct => {
+       let product = new Product(jsonProduct);
+        
         document
         .querySelector(".item__img")
         .innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
@@ -18,12 +16,47 @@ fetch("http://localhost:3000/api/products")
         for (let color of product.colors){
             document.getElementById('colors').innerHTML += `
             <option value="${color}">${color}</option>`};
-   }}
+   
     
 });
-document
-.getElementById('colors')
-.addEventListener('change', function(event) {
+function addToCart(){
+colorChoosen = document.getElementById('colors').value;
+quantityChoosen = document.getElementById('quantity').value;
+var newItem = 
+{
+    "id" : productId,
+    "color" : colorChoosen,
+    "quantity" : quantityChoosen 
+};
+if (!colorChoosen || (quantityChoosen == 0)) 
+{
+    alert('vous devez choisir la couleur et la quantité :-)')
+}
+    else
+    {
+        var allItems = JSON.parse(localStorage.getItem('items')) || [];
+        allItems.push(newItem);
+        localStorage.setItem('items', JSON.stringify(allItems));
+    
+ 
+  document.querySelector('.item').innerHTML = `<div class="confirm-pop">
+<h2>Votre produit a bien été ajouté au panier</h2>
+<a href="index.html">
+<div class="item__content__addButton">
+<button type="button"> Continuer vos achats</button>
+</div></a>
+<a href="cart.html">
+<div class="item__content__addButton">
+<button type="button"> Aller au panier</button>
+</div></a>
+</div> `
 
-    console.log(event.target.value);
-})
+
+}
+
+}
+
+document
+.getElementById('addToCart')
+.addEventListener('click', addToCart);
+
