@@ -1,12 +1,17 @@
+// Find the Id of the product in the URL
 const productId = new URLSearchParams(window.location.search).get('Id')
 
 
-
+//Get the product form API searching by ID
 fetch(`http://localhost:3000/api/products/${productId}`)
-.then(data => data.json())
+.then(data => data.json()) 
 .then( jsonProduct => {
-       let product = new Product(jsonProduct);
-        
+       var product = new Product(jsonProduct);
+       productPhoto = product.imageUrl;
+       productPrice = product.price;
+       productAltTxt = product.altTxt;
+       productName = product.name;
+//Insert the datas into the HTML        
         document
         .querySelector(".item__img")
         .innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
@@ -17,30 +22,83 @@ fetch(`http://localhost:3000/api/products/${productId}`)
             document.getElementById('colors').innerHTML += `
             <option value="${color}">${color}</option>`};
    
-    
+            
 });
+
+//When button clicked, put the product into localStorage.
+
 function addToCart(){
-colorChoosen = document.getElementById('colors').value;
-quantityChoosen = document.getElementById('quantity').value;
+    
+//Retrieves values from selectors
+let colorChoosen = document.getElementById('colors').value;
+let quantityChoosen = document.getElementById('quantity').value;
+
+//Create new Object to send to the localStorage
 var newItem = 
 {
     "id" : productId,
     "color" : colorChoosen,
-    "quantity" : quantityChoosen 
+    "quantity" : quantityChoosen,
+    "photo" : productPhoto, 
+    "altText" : productAltTxt,
+    "price" : productPrice,
+    "name" : productName
+    
+
 };
+
+//Invite user to choose color and quantity before sending request
+
 if (!colorChoosen || (quantityChoosen == 0)) 
 {
     alert('vous devez choisir la couleur et la quantité :-)')
 }
+
     else
     {
+
+//retrieve localSotrage array
+
         var allItems = JSON.parse(localStorage.getItem('items')) || [];
+ 
+//check if an object in the localStorage array has the same id and color
+        var itemMatching = (allItems.find(item => item.id === productId) && allItems.find(item => item.color === colorChoosen));
+            
+        if(itemMatching){
+           
+//adding quantities of the two matching items
+            let quantityOfInitialItem = itemMatching.quantity;
+            let newQuantity = parseInt(quantityOfInitialItem) + parseInt(quantityChoosen);
+
+//finding position in localStorage of the initial Item
+            let initialItemPos = allItems.indexOf(itemMatching);
+             
+            var modifyItem = 
+            {
+                "id" : productId,
+                "color" : colorChoosen,
+                "quantity" : newQuantity,
+                "photo" : productPhoto, 
+                "altText" : productAltTxt,
+                "price" : productPrice,
+                "name" : productName 
+            };
+
+//Add modified item in localStorage and replace intial one
+            allItems.splice(initialItemPos, 1, modifyItem);
+            localStorage.setItem('items', JSON.stringify(allItems));
+
+        }
+        
+//If item not matching in localStorage, adding it to localStorage
+        else{
         allItems.push(newItem);
         localStorage.setItem('items', JSON.stringify(allItems));
-    
- 
-  document.querySelector('.item').innerHTML = `<div class="confirm-pop">
-<h2>Votre produit a bien été ajouté au panier</h2>
+        }
+
+//Confirm user action and redirect to homepage or cart
+document.querySelector('.item').innerHTML = `<div class="confirm-pop">
+<h1>Votre produit a bien été ajouté au panier</h1>
 <a href="index.html">
 <div class="item__content__addButton">
 <button type="button"> Continuer vos achats</button>
