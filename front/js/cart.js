@@ -123,8 +123,9 @@ function cartTotalPrice() {
 
 //Form input validation
 document
-  .querySelector('.cart__order__form input[type="button"]')
-  .addEventListener("click", function () {
+  .querySelector('.cart__order__form input[type="submit"]')
+  .addEventListener("click", function (e) {
+    e.preventDefault();   
     //are all inputs valid? let create a variable to checkout
     var valid = true;
     for (let input of document.querySelectorAll(".cart__order__form input")) {
@@ -161,10 +162,14 @@ document
           return result.json();
         })
         .then(function (value) {
-          document.querySelector(
-            "main"
-          ).innerHTML = `<div class="title"><h1> Votre commande est en cours </h1>
-          <h2>référence de votre commande : ${value.orderId}</h2></div>`;
+          orderId = value.orderId;
+          console.log(orderId);
+          let newDiv = document.createElement("div");
+          document.querySelector("form").appendChild(newDiv);
+          newDiv.innerHTML = `<input type="text" name="orderId" id="orderId" value=${orderId}>`;
+          document.querySelector("form").submit()
+
+
         })
         .then(function (clear) {
           localStorage.clear();
