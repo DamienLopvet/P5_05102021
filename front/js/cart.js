@@ -126,20 +126,21 @@ document
   .querySelector('.cart__order__form input[type="submit"]')
   .addEventListener("click", function (e) {
     e.preventDefault();   
-    //are all inputs valid? let create a variable to checkout
-    var valid = true;
-    for (let input of document.querySelectorAll(".cart__order__form input")) {
+   //are all inputs valid? let create a variable to checkout
+   var valid = true;
+   for (let input of document.querySelectorAll(".cart__order__form input")) {
+     
       //corespond a : if (valid = true && input.reportValidity())
-      // qui corespond aussi a : valid = valid && input.reportValidity()
-      valid &= input.reportValidity();
-      if (!valid) {
-        break;
-      }
-    }
-    if (valid) {
-      if (allItems.length >= 1) {
-        itemsId = allItems.map((product) => product.id);
-      }
+     // qui corespond aussi a : valid = valid && input.reportValidity()
+     valid &= input.reportValidity();
+     if (!valid) {
+       break;
+     }
+   }
+   if (valid) {
+     if (allItems.length >= 1) {
+       itemsId = allItems.map((product) => product.id);
+     }
       //Send Datas to the API
       fetch("http://localhost:3000/api/products/order", {
         method: "POST",
@@ -165,6 +166,7 @@ document
           orderId = value.orderId;
           console.log(orderId);
           let newDiv = document.createElement("div");
+          newDiv.style.display = "none";
           document.querySelector("form").appendChild(newDiv);
           newDiv.innerHTML = `<input type="text" name="orderId" id="orderId" value=${orderId}>`;
           document.querySelector("form").submit()
