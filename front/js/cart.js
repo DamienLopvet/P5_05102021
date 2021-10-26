@@ -1,14 +1,23 @@
-(window.onload = setCart()), cartTotalPrice();
+
+/**
+ * Onlaod, lunch a function that create the HTML of each item from the localStorage
+ * Also lunch a function that sum the totals
+ */
+(window.onload = setCart(), cartTotalPrice());
 function setCart() {
   allItems = JSON.parse(localStorage.getItem("items")) || [];
 
+  /**
+   * If cart is empty alert user, else create HTML.
+   */
   if (allItems.length == 0) {
     document.querySelector("h1").innerHTML = "votre panier est vide";
   } else {
     for (let item of allItems) {
+      
       totalOfThisItem = item.price * item.quantity;
-
       itemQuantity = item.quantity;
+      
       document.getElementById(
         "cart__items"
       ).innerHTML += `<article class="cart__item" id="${item.id}">
@@ -23,7 +32,6 @@ function setCart() {
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
-            <p>Qté :</p><p id="itemQuantity"></p>
             <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
           </div>
           <div class="cart__item__content__settings__delete">
@@ -36,7 +44,9 @@ function setCart() {
   }
 }
 
-//Modifying quantity
+/**
+ * Modifying quantity
+ */ 
 
 document
   .querySelector("section #cart__items")
@@ -67,18 +77,28 @@ document
           price: oldItem.price,
           name: oldItem.name,
         };
-
+/**
+ * replace an item with the new quantity in the localStorage
+ */
         allItems.splice(oldItemIndex, 1, newItem);
         localStorage.setItem("items", JSON.stringify(allItems));
 
-        //Fixing new total price of item modified
-        let newTotal = newItem.quantity * newItem.price;
-        totalInput.innerHTML = `${newTotal}`;
+        /**
+         * Fixing new total price of item modified
+         */ 
+        let newTotal = newQuantity * newItem.price;
+       totalInput.innerHTML = `${newTotal}`;
       }
     }
+    /**
+     * Update cart total price
+     */
     cartTotalPrice();
   });
-//delete an Item
+
+/**
+ * Delete an Item
+ */
 document.querySelector("section").addEventListener("click", function (e) {
   if (e.target && e.target.className == "deleteItem") {
     let itemToDeleteId = e.target.closest(".cart__item").id;
@@ -86,7 +106,9 @@ document.querySelector("section").addEventListener("click", function (e) {
       .closest(".cart__item")
       .querySelector(".color").id;
     let articleToDelete = e.target.closest("article");
-
+/**
+ * Make sure we target the good item in the localStorage.
+ */
     let matchIdAndColor =
       allItems.find((item) => item.id === itemToDeleteId) &&
       allItems.find((item) => item.color === itemToDEleteColor);
@@ -98,13 +120,18 @@ document.querySelector("section").addEventListener("click", function (e) {
     }
     articleToDelete.remove();
   }
+  /**
+   * If no items left in the cart, then alert User
+   */
   if (allItems.length == 0) {
     document.querySelector("h1").innerHTML = "votre panier est vide";
   }
   cartTotalPrice();
 });
 
-//fixing Total price off all items
+/**
+ * fixing Total price off all items
+ */
 
 function cartTotalPrice() {
   let totalQuantity = 0;
@@ -121,7 +148,10 @@ function cartTotalPrice() {
   document.getElementById("totalPrice").innerText = totalPrice;
 }
 
-//Form input validation
+/**
+ * Form input validation
+ * Before sending datas, check inputs validitys using html5 default functions
+ */
 document
   .querySelector('.cart__order__form input[type="submit"]')
   .addEventListener("click", function (e) {
@@ -130,14 +160,18 @@ document
    var valid = true;
    for (let input of document.querySelectorAll(".cart__order__form input")) {
      
-      //corespond a : if (valid = true && input.reportValidity())
-     // qui corespond aussi a : valid = valid && input.reportValidity()
      valid &= input.reportValidity();
      if (!valid) {
        break;
      }
    }
    if (valid) {
+     /**
+      * check if there is at least one item in the cart
+      */
+     if(allItems.length == 0){
+       alert("Choisissez des articles avant de commander");
+     }
      if (allItems.length >= 1) {
        itemsId = allItems.map((product) => product.id);
      }
@@ -164,7 +198,6 @@ document
         })
         .then(function (value) {
           orderId = value.orderId;
-          console.log(orderId);
           let newDiv = document.createElement("div");
           newDiv.style.display = "none";
           document.querySelector("form").appendChild(newDiv);

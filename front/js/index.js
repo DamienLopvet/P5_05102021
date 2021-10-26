@@ -1,5 +1,10 @@
 
-
+/**
+ * Send request using fetch API to get all products.
+ * transform the datas received into json datas.
+ * insert them into an HTML using a loop.
+ *  
+ */
 fetch("http://localhost:3000/api/products")
 .then(data => data.json())
 .then( jsonlistProduct => {
