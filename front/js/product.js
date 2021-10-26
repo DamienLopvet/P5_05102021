@@ -8,8 +8,7 @@ const productId = new URLSearchParams(window.location.search).get("Id");
  */
 fetch(`http://localhost:3000/api/products/${productId}`)
   .then((data) => data.json())
-  .then((jsonProduct) => {
-    var product = new Product(jsonProduct);
+  .then((product) => {
     productPhoto = product.imageUrl;
     productPrice = product.price;
     productAltTxt = product.altTxt;
@@ -95,10 +94,9 @@ function addToCart() {
       allItems.splice(initialItemPos, 1, modifyItem);
       localStorage.setItem("items", JSON.stringify(allItems));
     } else {
-
-    /**
-     * If item not matching in localStorage, adding it to localStorage
-     */
+      /**
+       * If item not matching in localStorage, adding it to localStorage
+       */
       allItems.push(newItem);
       localStorage.setItem("items", JSON.stringify(allItems));
     }

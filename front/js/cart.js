@@ -32,6 +32,7 @@ function setCart() {
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
+          <p>Quantité</p>
             <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
           </div>
           <div class="cart__item__content__settings__delete">
@@ -97,7 +98,7 @@ document
   });
 
 /**
- * Delete an Item
+ * Delete an Item using target.closest method 
  */
 document.querySelector("section").addEventListener("click", function (e) {
   if (e.target && e.target.className == "deleteItem") {
@@ -150,7 +151,7 @@ function cartTotalPrice() {
 
 /**
  * Form input validation
- * Before sending datas, check inputs validitys using html5 default functions
+ * Before sending datas, check inputs validitys using html5 default functions with patterns and titles to indicate user whats he has to do.
  */
 document
   .querySelector('.cart__order__form input[type="submit"]')
@@ -175,7 +176,9 @@ document
      if (allItems.length >= 1) {
        itemsId = allItems.map((product) => product.id);
      }
-      //Send Datas to the API
+      /**
+       * Send Datas to the API
+       */
       fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
@@ -196,17 +199,22 @@ document
         .then(function (result) {
           return result.json();
         })
-        .then(function (value) {
-          orderId = value.orderId;
+        .then(function (data) {
+          /**
+           * Create an input to insert order Id
+           */
+          orderId = data.orderId;
           let newDiv = document.createElement("div");
-          newDiv.style.display = "none";
           document.querySelector("form").appendChild(newDiv);
-          newDiv.innerHTML = `<input type="text" name="orderId" id="orderId" value=${orderId}>`;
+          newDiv.innerHTML = `<input type="hidden" name="orderId" id="orderId" value=${orderId}>`;
           document.querySelector("form").submit()
 
 
         })
-        .then(function (clear) {
+        .then(function () {
+          /**
+           * clear localStorage
+           */
           localStorage.clear();
         });
     }
