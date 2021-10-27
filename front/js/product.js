@@ -7,7 +7,7 @@ const productId = new URLSearchParams(window.location.search).get("Id");
  * Get the product from API searching by ID
  */
 fetch(`http://localhost:3000/api/products/${productId}`)
-  .then((data) => data.json())
+  .then((reponse) => reponse.json())
   .then((product) => {
     productPhoto = product.imageUrl;
     productPrice = product.price;
