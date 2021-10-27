@@ -5,18 +5,17 @@
  */
 (window.onload = setCart(), cartTotalPrice());
 function setCart() {
-  allItems = JSON.parse(localStorage.getItem("items")) || [];
+  storedItems = JSON.parse(localStorage.getItem("items")) || [];
 
   /**
    * If cart is empty alert user, else create HTML.
    */
-  if (allItems.length == 0) {
+  if (storedItems.length == 0) {
     document.querySelector("h1").innerHTML = "votre panier est vide";
   } else {
-    for (let item of allItems) {
+    for (let item of storedItems) {
       
       totalOfThisItem = item.price * item.quantity;
-      itemQuantity = item.quantity;
       
       document.getElementById(
         "cart__items"
@@ -32,7 +31,7 @@ function setCart() {
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
-          <p>Quantité</p>
+          <p>Quantité :</p>
             <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
           </div>
           <div class="cart__item__content__settings__delete">
@@ -46,12 +45,12 @@ function setCart() {
 }
 
 /**
- * Modifying quantity
+ * Modifying quantity using element.closest method
  */ 
 
 document
   .querySelector("section #cart__items")
-  .addEventListener("change", function (e) {
+  .addEventListener("change", (e)=> {
     if (e.target && e.target.nodeName == "INPUT") {
       let newQuantity = e.target.closest(".itemQuantity").value;
       let oldItemID = e.target.closest(".cart__item").id;
@@ -63,11 +62,11 @@ document
         .querySelector("div.cart__item__content__titlePrice > p");
 
       let matchIdAndColor =
-        allItems.find((item) => item.id === oldItemID) &&
-        allItems.find((item) => item.color === oldItemColor);
+        storedItems.find((item) => item.id === oldItemID) &&
+        storedItems.find((item) => item.color === oldItemColor);
       if (matchIdAndColor) {
-        let oldItemIndex = allItems.indexOf(matchIdAndColor);
-        oldItem = allItems[oldItemIndex];
+        let oldItemIndex = storedItems.indexOf(matchIdAndColor);
+        oldItem = storedItems[oldItemIndex];
 
         let newItem = {
           id: oldItem.id,
@@ -81,8 +80,8 @@ document
 /**
  * replace an item with the new quantity in the localStorage
  */
-        allItems.splice(oldItemIndex, 1, newItem);
-        localStorage.setItem("items", JSON.stringify(allItems));
+        storedItems.splice(oldItemIndex, 1, newItem);
+        localStorage.setItem("items", JSON.stringify(storedItems));
 
         /**
          * Fixing new total price of item modified
@@ -100,10 +99,10 @@ document
 /**
  * Delete an Item using target.closest method 
  */
-document.querySelector("section").addEventListener("click", function (e) {
+document.querySelector("section").addEventListener("click", (e)=> {
   if (e.target && e.target.className == "deleteItem") {
     let itemToDeleteId = e.target.closest(".cart__item").id;
-    let itemToDEleteColor = e.target
+    let itemToDeleteColor = e.target
       .closest(".cart__item")
       .querySelector(".color").id;
     let articleToDelete = e.target.closest("article");
@@ -111,30 +110,34 @@ document.querySelector("section").addEventListener("click", function (e) {
  * Make sure we target the good item in the localStorage.
  */
     let matchIdAndColor =
-      allItems.find((item) => item.id === itemToDeleteId) &&
-      allItems.find((item) => item.color === itemToDEleteColor);
+      storedItems.find((item) => item.id === itemToDeleteId) &&
+      storedItems.find((item) => item.color === itemToDeleteColor);
     if (matchIdAndColor) {
-      let itemToDeleteIndex = allItems.indexOf(matchIdAndColor);
-      itemToDelete = allItems[itemToDeleteIndex];
-      allItems.splice(itemToDeleteIndex, 1);
-      localStorage.setItem("items", JSON.stringify(allItems));
+      let itemToDeleteIndex = storedItems.indexOf(matchIdAndColor);
+      itemToDelete = storedItems[itemToDeleteIndex];
+      storedItems.splice(itemToDeleteIndex, 1);
+      localStorage.setItem("items", JSON.stringify(storedItems));
     }
     articleToDelete.remove();
   }
   /**
    * If no items left in the cart, then alert User
    */
-  if (allItems.length == 0) {
+  if (storedItems.length == 0) {
     document.querySelector("h1").innerHTML = "votre panier est vide";
   }
+  /**
+     * Update cart total price
+     */
   cartTotalPrice();
 });
 
 /**
- * fixing Total price off all items
+ * fixing Total price and total quantitity of all items
  */
 
 function cartTotalPrice() {
+  
   let totalQuantity = 0;
   document
     .querySelectorAll('input[type="number"]')
@@ -151,14 +154,16 @@ function cartTotalPrice() {
 
 /**
  * Form input validation
- * Before sending datas, check inputs validitys using html5 default functions with patterns and titles to indicate user whats he has to do.
+ * Before sending datas, check inputs validity using html5 default functions with patterns and titles to indicate user what he has to do.
  */
 document
   .querySelector('.cart__order__form input[type="submit"]')
   .addEventListener("click", function (e) {
     e.preventDefault();   
-   //are all inputs valid? let create a variable to checkout
-   var valid = true;
+   /**
+    * Are all inputs valids? let create a variable to checkout
+       */
+    var valid = true;
    for (let input of document.querySelectorAll(".cart__order__form input")) {
      
      valid &= input.reportValidity();
@@ -170,11 +175,11 @@ document
      /**
       * check if there is at least one item in the cart
       */
-     if(allItems.length == 0){
+     if(storedItems.length == 0){
        alert("Choisissez des articles avant de commander");
      }
-     if (allItems.length >= 1) {
-       itemsId = allItems.map((product) => product.id);
+     if (storedItems.length >= 1) {
+       itemsId = storedItems.map((product) => product.id);
      }
       /**
        * Send Datas to the API
@@ -199,22 +204,21 @@ document
         .then(function (result) {
           return result.json();
         })
-        .then(function (data) {
+        .then(function (orderDatas) {
           /**
-           * Create an input to insert order Id
+           * Create a hidden input to insert order Id
            */
-          orderId = data.orderId;
+          orderId = orderDatas.orderId;
           let newDiv = document.createElement("div");
           document.querySelector("form").appendChild(newDiv);
           newDiv.innerHTML = `<input type="hidden" name="orderId" id="orderId" value=${orderId}>`;
+          
           document.querySelector("form").submit()
 
 
         })
         .then(function () {
-          /**
-           * clear localStorage
-           */
+         
           localStorage.clear();
         });
     }

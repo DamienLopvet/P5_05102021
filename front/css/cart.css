@@ -54,6 +54,7 @@ h2 {
     border: 1px solid #767676;
     text-align: center;
     text-align-last: center;
+	width:40px
 }
 .cart__item__content__settings input:focus {
 	outline: none;
@@ -66,7 +67,11 @@ h2 {
 	display: flex;
 }
 .cart__item__content__settings__delete p {
-	display: inline;
+	display: inline-block;
+	border: 1px solid white;
+	border-radius: 20px;
+	padding: 0 7px 2px;
+	margin-top: 10px;
 }
 .cart__item__content__settings__delete p:hover {
 	cursor: pointer;

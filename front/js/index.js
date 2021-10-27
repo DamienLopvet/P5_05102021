@@ -8,7 +8,6 @@ fetch("http://localhost:3000/api/products")
   .then((reponse) => reponse.json())
   .then((data) => {
     for (let product of data) {
-      console.log(product.name);
       document.getElementById(
         "items"
       ).innerHTML += `<a href="./product.html?Id=${product._id}">
