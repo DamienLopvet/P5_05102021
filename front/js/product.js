@@ -2,31 +2,39 @@
  * retrieve the Id of the product in the URL
  */
 const productId = new URLSearchParams(window.location.search).get("Id");
-
+/**
+ * Redirect User if there is no Id in the Url.
+ */
+if (!productId) {
+  window.location.href = "index.html";
+} else {
 /**
  * Get the product from API searching by ID
  */
-fetch(`http://localhost:3000/api/products/${productId}`)
-  .then((reponse) => reponse.json())
-  .then((product) => {
-    productPhoto = product.imageUrl;
-    productPrice = product.price;
-    productAltTxt = product.altTxt;
-    productName = product.name;
-    /**
-     *Insert the datas into the HTML
-     */
-    document.querySelector(
-      ".item__img"
-    ).innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-    document.querySelector("#title").innerText = `${product.name}`;
-    document.getElementById("price").innerText = `${product.price}`;
-    document.getElementById("description").innerText = `${product.description}`;
-    for (let color of product.colors) {
-      document.getElementById("colors").innerHTML += `
+  fetch(`http://localhost:3000/api/products/${productId}`)
+    .then((reponse) => reponse.json())
+    .then((product) => {
+      productPhoto = product.imageUrl;
+      productPrice = product.price;
+      productAltTxt = product.altTxt;
+      productName = product.name;
+      /**
+       *Insert the datas into the HTML
+       */
+      document.querySelector(
+        ".item__img"
+      ).innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+      document.querySelector("#title").innerText = `${product.name}`;
+      document.getElementById("price").innerText = `${product.price}`;
+      document.getElementById(
+        "description"
+      ).innerText = `${product.description}`;
+      for (let color of product.colors) {
+        document.getElementById("colors").innerHTML += `
             <option value="${color}">${color}</option>`;
-    }
-  });
+      }
+    });
+}
 
 /**
  * onclick : put the product into localStorage.
@@ -121,3 +129,15 @@ function addToCart() {
  * listening to the "ajouter au panier" button
  */
 document.getElementById("addToCart").addEventListener("click", addToCart);
+
+/**
+ * Update the total price.
+ */
+document
+  .getElementById("quantity")
+  .addEventListener("input", calculateTotalPrice);
+function calculateTotalPrice() {
+  let quantity = document.getElementById("quantity").value;
+  let totalPrice = quantity * productPrice;
+  document.getElementById("price").innerHTML = `${totalPrice}`;
+}
