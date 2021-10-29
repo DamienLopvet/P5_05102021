@@ -27,4 +27,6 @@ Pour ce projet, je ne pouvais utiliser que du code JavaScript pur. L'utilisation
 <h2>Aperçu du rendu</h2>
 <img src="front\images\exemple_accueil.jpg" width="400">
 
-<h2>Plan de test</h2>
+<h2>Plan de test d'acceptation</h2>
+<img src="front\images\plan_de_test_1.jpg" width="400">
+<img src="front\images\plan_de_test_2.jpg" width="400">
