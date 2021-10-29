@@ -7,4 +7,11 @@ Vous êtes en poste dans une agence de développement web depuis quelques semain
 
 Votre client est Kanap, une marque de canapés qui vend ses produits depuis sa boutique exclusivement. Aujourd’hui, celle-ci souhaiterait avoir une plateforme de e-commerce en plus de sa boutique physique pour vendre ses produits sur Internet.
 
-Pour ce projet, vous ne pouvez utiliser que du code JavaScript pur. L'utilisation de tout framework ou librairie JavaScript (React, Angular, Vue ou jQuery, par exemple) est interdite pour ce projet.
+Pour ce projet, je ne pouvais utiliser que du code JavaScript pur. L'utilisation de tout framework ou librairie JavaScript (React, Angular, Vue ou jQuery, par exemple) etait interdite pour ce projet.
+
+<h2>Compétences évaluées</h2>
+<ul>
+  <li>Gérer des événements JavaScript<li>
+  <li>Valider des données issues de sources externes</li>
+  <li>Créer un plan de test pour une application</li>
+  <li>Interagir avec un web service avec JavaScript</li>
