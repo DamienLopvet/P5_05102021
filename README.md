@@ -1,5 +1,5 @@
 # Kanap #
-<img src="front\images\logo.png" width="300" style="position: center">
+<img src="front\images\logo.png" width="300" style="display: block; margin: auto">
 This is the front end and back end server for Project 5 of the Web Developer path.
 
 ### Back end Prerequisites ###
