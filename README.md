@@ -28,5 +28,10 @@ Pour ce projet, je ne pouvais utiliser que du code JavaScript pur. L'utilisation
 <img src="front\images\exemple_accueil.jpg" width="400">
 
 <h2>Plan de test d'acceptation</h2>
-<img src="front\images\plan_de_test_1.jpg" width="500">
+  <img src="front\images\plan_de_test_1.jpg" width="500">
 <img src="front\images\plan_de_test_2.jpg" width="500">
+  
+  
+  
+  
+
