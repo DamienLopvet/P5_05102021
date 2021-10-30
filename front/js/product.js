@@ -12,7 +12,13 @@ if (!productId) {
    * Get the product from API searching by ID
    */
   fetch(`http://localhost:3000/api/products/${productId}`)
-    .then((reponse) => reponse.json())
+    .then((reponse) => {
+      if (reponse.ok) {
+        return reponse.json();
+      } else {
+        console.log("Mauvaise réponse du réseau");
+      }
+    })
     .then((product) => {
       productPhoto = product.imageUrl;
       productPrice = product.price;
@@ -33,6 +39,10 @@ if (!productId) {
         document.getElementById("colors").innerHTML += `
             <option value="${color}">${color}</option>`;
       }
+    }).catch(function (error) {
+      console.log(
+        "Il y a eu un problème avec l'opération fetch: " + error.message
+      );
     });
 }
 

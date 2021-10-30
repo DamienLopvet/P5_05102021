@@ -5,7 +5,13 @@
  *
  */
 fetch("http://localhost:3000/api/products")
-  .then((reponse) => reponse.json())
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      console.log("Mauvaise réponse du réseau");
+    }
+  })
   .then((data) => {
     for (let product of data) {
       document.getElementById(
@@ -19,4 +25,9 @@ fetch("http://localhost:3000/api/products")
        </article>
      </a> `;
     }
+  })
+  .catch(function (error) {
+    console.log(
+      "Il y a eu un problème avec l'opération fetch: " + error.message
+    );
   });

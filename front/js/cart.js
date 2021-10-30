@@ -1,9 +1,8 @@
-
 /**
  * Onlaod, lunch a function that create the HTML of each item from the localStorage
  * Also lunch a function that sum the totals
  */
-(window.onload = setCart(), cartTotalPrice());
+(window.onload = setCart()), cartTotalPrice();
 function setCart() {
   storedItems = JSON.parse(localStorage.getItem("items")) || [];
 
@@ -14,9 +13,8 @@ function setCart() {
     document.querySelector("h1").innerHTML = "votre panier est vide";
   } else {
     for (let item of storedItems) {
-      
       totalOfThisItem = item.price * item.quantity;
-      
+
       document.getElementById(
         "cart__items"
       ).innerHTML += `<article class="cart__item" id="${item.id}">
@@ -35,7 +33,7 @@ function setCart() {
             <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
           </div>
           <div class="cart__item__content__settings__delete">
-            <p class="deleteItem">Supprimer</p>
+          <p class="deleteItem">Supprimer</p>
           </div>
         </div>
       </div>
@@ -46,11 +44,11 @@ function setCart() {
 
 /**
  * Modifying quantity using element.closest method
- */ 
+ */
 
 document
   .querySelector("section #cart__items")
-  .addEventListener("change", (e)=> {
+  .addEventListener("change", (e) => {
     if (e.target && e.target.nodeName == "INPUT") {
       let newQuantity = e.target.closest(".itemQuantity").value;
       let oldItemID = e.target.closest(".cart__item").id;
@@ -77,17 +75,17 @@ document
           price: oldItem.price,
           name: oldItem.name,
         };
-/**
- * replace an item with the new quantity in the localStorage
- */
+        /**
+         * replace an item with the new quantity in the localStorage
+         */
         storedItems.splice(oldItemIndex, 1, newItem);
         localStorage.setItem("items", JSON.stringify(storedItems));
 
         /**
          * Fixing new total price of item modified
-         */ 
+         */
         let newTotal = newQuantity * newItem.price;
-       totalInput.innerHTML = `${newTotal}`;
+        totalInput.innerHTML = `${newTotal}`;
       }
     }
     /**
@@ -97,72 +95,73 @@ document
   });
 
 /**
- * Delete an Item using target.closest method 
+ * Delete an Item
+ *First : any click on the body will abort delete process
  */
-document.querySelector("section").addEventListener("click", (e)=> {
-  e.preventDefault()
-  if (e.target && e.target.className == "deleteItem") {
-    let itemToDeleteId = e.target.closest(".cart__item").id;
-    let itemToDeleteColor = e.target
-      .closest(".cart__item")
-      .querySelector(".color").id;
-     articleToDelete = e.target.closest("article");
-/**
- * Make sure we target the good item in the localStorage.
- */
-     matchIdAndColor =
-      storedItems.find((item) => item.id === itemToDeleteId) &&
-      storedItems.find((item) => item.color === itemToDeleteColor);
-
-      /**
-       * If matching initalize delete process by asking confirmation 
-       */
-    if (matchIdAndColor) {
-
-      e.target.closest(".cart__item__content__settings__delete").innerHTML = `<div><h3>Confirmer la suppression ?</h3>
-      <button class="cart__order__delete" id="confirm">Confirmer</button>
-      <button class="cart__order__delete" id="abort">Annuler</button></div> `;
-     /**
-      * Avoid User to click on several "supprimer" elements
-      */
-      document.querySelectorAll('.deleteItem').forEach(el => el.classList.remove("deleteItem"));
-
-      
-      document.querySelector('#confirm').addEventListener('click', ()=>{
-      let itemToDeleteIndex = storedItems.indexOf(matchIdAndColor);
-      itemToDelete = storedItems[itemToDeleteIndex];
-      storedItems.splice(itemToDeleteIndex, 1);
-      localStorage.setItem("items", JSON.stringify(storedItems));
-      articleToDelete.remove();
-      location.reload();
-
-});      
-/**
- * If deleting process is aborted, then just relaod the page to retrieve initial HTML
- */
-document.querySelector('#abort').addEventListener('click', ()=>{
-  location.reload();
-})}};
-
-  
-  /**
-   * If no items left in the cart, then alert User
-   */
-  if (storedItems.length == 0) {
-    document.querySelector("h1").innerHTML = "votre panier est vide";
-  }
-  /**
-     * Update cart total price
-     */
-  cartTotalPrice();
+document.querySelector("body").addEventListener("click", (event) => {
+  closeBoxes();
 });
+/**
+ * When ckicking on "supprimer", create a confirmDelete HTML
+ */
+document.querySelectorAll(".deleteItem").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeBoxes();
+    event.target.style.display = "none";
+    event.target.insertAdjacentHTML(
+      "beforebegin",
+      `<div class="confirmBox"><h3>Confirmer la suppression ?</h3>
+      <button class="cart__order__delete" id="confirmDelete">Confirmer</button>
+      <button class="cart__order__delete">Annuler</button></div>`
+    );
+
+    /**
+     * If confirm delete process : match id and color,
+     * find and delete localStorage Item and remove item from cart HTML
+     */
+    document
+      .querySelector("#confirmDelete")
+      .addEventListener("click", function () {
+        let itemToDeleteId = event.target.closest(".cart__item").id;
+        let itemToDeleteColor = event.target
+          .closest(".cart__item")
+          .querySelector(".color").id;
+        matchIdAndColor =
+          storedItems.find((item) => item.id === itemToDeleteId) &&
+          storedItems.find((item) => item.color === itemToDeleteColor);
+        let itemToDeleteIndex = storedItems.indexOf(matchIdAndColor);
+        itemToDelete = storedItems[itemToDeleteIndex];
+        storedItems.splice(itemToDeleteIndex, 1);
+        localStorage.setItem("items", JSON.stringify(storedItems));
+        event.target.closest("article").remove();
+
+        /**
+         * recalculate totals
+         */
+        cartTotalPrice();
+        /**
+         * If no items left in the cart, then inform User
+         */
+        if (storedItems.length == 0) {
+          document.querySelector("h1").innerHTML = "votre panier est vide";
+        }
+      });
+  });
+});
+function closeBoxes() {
+  document.querySelectorAll(".confirmBox").forEach((item) => {
+    item.closest("article").querySelector(".deleteItem").style.display =
+      "inline-block";
+    item.remove();
+  });
+}
 
 /**
  * fixing Total price and total quantitity of all items
  */
 
 function cartTotalPrice() {
-  
   let totalQuantity = 0;
   document
     .querySelectorAll('input[type="number"]')
@@ -184,28 +183,27 @@ function cartTotalPrice() {
 document
   .querySelector('.cart__order__form input[type="submit"]')
   .addEventListener("click", function (e) {
-    e.preventDefault();   
-   /**
-    * Are all inputs valids? let create a variable to checkout
-       */
+    e.preventDefault();
+    /**
+     * Are all inputs valids? let create a variable to checkout
+     */
     var valid = true;
-   for (let input of document.querySelectorAll(".cart__order__form input")) {
-     
-     valid &= input.reportValidity();
-     if (!valid) {
-       break;
-     }
-   }
-   if (valid) {
-     /**
-      * check if there is at least one item in the cart
-      */
-     if(storedItems.length == 0){
-       alert("Choisissez des articles avant de commander");
-     }
-     if (storedItems.length >= 1) {
-       itemsId = storedItems.map((product) => product.id);
-     }
+    for (let input of document.querySelectorAll(".cart__order__form input")) {
+      valid &= input.reportValidity();
+      if (!valid) {
+        break;
+      }
+    }
+    if (valid) {
+      /**
+       * check if there is at least one item in the cart
+       */
+      if (storedItems.length == 0) {
+        alert("Choisissez des articles avant de commander");
+      }
+      if (storedItems.length >= 1) {
+        itemsId = storedItems.map((product) => product.id);
+      }
       /**
        * Send Datas to the API
        */
@@ -227,7 +225,9 @@ document
         }),
       })
         .then(function (result) {
-          return result.json();
+          if (result.ok) {
+            return result.json();
+          }
         })
         .then(function (orderDatas) {
           /**
@@ -237,13 +237,10 @@ document
           let newDiv = document.createElement("div");
           document.querySelector("form").appendChild(newDiv);
           newDiv.innerHTML = `<input type="hidden" name="orderId" id="orderId" value=${orderId}>`;
-          
-          document.querySelector("form").submit()
 
-
+          document.querySelector("form").submit();
         })
         .then(function () {
-         
           localStorage.clear();
         });
     }
