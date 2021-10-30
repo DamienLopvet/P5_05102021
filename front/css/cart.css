@@ -135,11 +135,24 @@ h2 {
     cursor: pointer;
     margin-top: 40px;
 }
+
 .cart__order__form__submit input:hover {
     box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
-
-
+.cart__order__delete {
+    font-size: 22px;
+    border-radius: 40px;
+    border: 0;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+	margin-right: 5px;
+    cursor: pointer;
+    
+}
+.cart__order__delete:hover {
+    box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
+}
 
 /***************/
 /*Media queries*/

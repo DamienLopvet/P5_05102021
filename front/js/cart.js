@@ -100,26 +100,51 @@ document
  * Delete an Item using target.closest method 
  */
 document.querySelector("section").addEventListener("click", (e)=> {
+  e.preventDefault()
   if (e.target && e.target.className == "deleteItem") {
     let itemToDeleteId = e.target.closest(".cart__item").id;
     let itemToDeleteColor = e.target
       .closest(".cart__item")
       .querySelector(".color").id;
-    let articleToDelete = e.target.closest("article");
+     articleToDelete = e.target.closest("article");
 /**
  * Make sure we target the good item in the localStorage.
  */
-    let matchIdAndColor =
+     matchIdAndColor =
       storedItems.find((item) => item.id === itemToDeleteId) &&
       storedItems.find((item) => item.color === itemToDeleteColor);
+
+      /**
+       * If matching initalize delete process by asking confirmation 
+       */
     if (matchIdAndColor) {
+
+      e.target.closest(".cart__item__content__settings__delete").innerHTML = `<div><h3>Confirmer la suppression ?</h3>
+      <button class="cart__order__delete" id="confirm">Confirmer</button>
+      <button class="cart__order__delete" id="abort">Annuler</button></div> `;
+     /**
+      * Avoid User to click on several "supprimer" elements
+      */
+      document.querySelectorAll('.deleteItem').forEach(el => el.classList.remove("deleteItem"));
+
+      
+      document.querySelector('#confirm').addEventListener('click', ()=>{
       let itemToDeleteIndex = storedItems.indexOf(matchIdAndColor);
       itemToDelete = storedItems[itemToDeleteIndex];
       storedItems.splice(itemToDeleteIndex, 1);
       localStorage.setItem("items", JSON.stringify(storedItems));
-    }
-    articleToDelete.remove();
-  }
+      articleToDelete.remove();
+      location.reload();
+
+});      
+/**
+ * If deleting process is aborted, then just relaod the page to retrieve initial HTML
+ */
+document.querySelector('#abort').addEventListener('click', ()=>{
+  location.reload();
+})}};
+
+  
   /**
    * If no items left in the cart, then alert User
    */

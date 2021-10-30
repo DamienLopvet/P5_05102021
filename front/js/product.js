@@ -8,9 +8,9 @@ const productId = new URLSearchParams(window.location.search).get("Id");
 if (!productId) {
   window.location.href = "index.html";
 } else {
-/**
- * Get the product from API searching by ID
- */
+  /**
+   * Get the product from API searching by ID
+   */
   fetch(`http://localhost:3000/api/products/${productId}`)
     .then((reponse) => reponse.json())
     .then((product) => {
@@ -41,6 +41,7 @@ if (!productId) {
  */
 
 function addToCart() {
+
   /**
    * Retrieves values from selectors
    */
@@ -61,10 +62,11 @@ function addToCart() {
   };
 
   /**
-   * Invite user to choose color and quantity before sending request
+   * Invite user to choose color before sending request
    */
-  if (!colorChoosen || quantityChoosen == 0) {
-    alert("vous devez choisir la couleur et la quantité :-)");
+
+  if (!colorChoosen) {
+alert("Vous devez choisir la couleur :-)")
   } else {
     /**Retrieve localSotrage array and parse into javascript.
      */
@@ -128,7 +130,29 @@ function addToCart() {
 /**
  * listening to the "ajouter au panier" button
  */
-document.getElementById("addToCart").addEventListener("click", addToCart);
+document.getElementById("addToCart").addEventListener("click", () => {
+  testLocalStorage();
+  addToCart();
+});
+/**
+ * Test Whether localStorage is Available
+ */
+ function testLocalStorage(){ 
+  var test = 'test';
+  try {
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+if(testLocalStorage() === false){
+  document.querySelector(".item").innerHTML = `<div class="confirm-pop">
+  <h1>Désolé, vous ne pouvez pas acheter nos produits depuis ce navigateur, essayez avec un autre navigateur</h1></div>`
+}
+
+
 
 /**
  * Update the total price.
