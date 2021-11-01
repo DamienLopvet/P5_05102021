@@ -77,7 +77,11 @@ function addToCart() {
 
   if (!colorChoosen) {
 alert("Vous devez choisir la couleur :-)")
-  } else {
+  } 
+  else if(quantityChoosen > 100){
+    alert(`Vous avez choisi ${quantityChoosen}, devez choisir une quantité comprise entre 1 et 100`)
+  }
+  else {
     /**Retrieve localSotrage array and parse into javascript.
      */
     var allItems = JSON.parse(localStorage.getItem("items")) || [];

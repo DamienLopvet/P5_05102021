@@ -180,7 +180,23 @@ function cartTotalPrice() {
  * Form input validation
  * Before sending datas, check inputs validity using html5 default functions with patterns and titles to indicate user what he has to do.
  */
-document
+/**
+ * first get add paterns and titles to the  form inputs
+ */
+let firstName = document.getElementById('firstName')
+firstName.setAttribute("pattern", "[A-Za-zÀ-ÿ]+")
+  firstName.setAttribute("title", "Ce champ ne doit contenir que des lettres")
+let lastName = document.getElementById('lastName')
+lastName.setAttribute("pattern", "[A-Za-zÀ-ÿ]+")
+lastName.setAttribute("title", "Ce champ ne doit contenir que des lettres")
+document.getElementById('address').setAttribute("title","Entrez votre adresse postale")
+let city = document.getElementById('city')
+city.setAttribute("pattern", "[A-Za-zÀ-ÿ]+")
+  city.setAttribute("title", "Ce champ ne doit contenir que des lettres")
+document.getElementById('email').setAttribute("pattern", "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+
+
+  document
   .querySelector('.cart__order__form input[type="submit"]')
   .addEventListener("click", function (e) {
     e.preventDefault();
